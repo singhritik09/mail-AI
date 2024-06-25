@@ -11,6 +11,7 @@ const sendemail = (ms) => new Promise((res, rej) => setTimeout(() => res(), 5 * 
 
 const workerEmailFetch = new Worker("email-queue", async (job) => {
     console.log('Message: ', job.data.body);
+    console.log("ID:",job.id);
 },{connection}).run;
 
 export default workerEmailFetch;

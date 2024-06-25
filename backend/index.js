@@ -5,6 +5,8 @@ import fetchEmails from './producer.js';
 import workerEmailFetch from './worker.js';
 import { Redis } from "ioredis";
 
+import {CLIENT_ID,CLIENT_SECRET,REDIRECT_URL,REFRESH_TOKEN} from './secrets.js';
+
 const connection = new Redis({
   host: 'localhost', // Replace with your Redis server host
   port: 6379,        // Replace with your Redis server port
@@ -14,10 +16,6 @@ const port = 8000;
 const app = express();
 
 
-const CLIENT_ID = '102082836200-43dthnd6pq1vs0nh8e9fspsqscjfb112.apps.googleusercontent.com';
-const CLIENT_SECRET = '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';
-const REDIRECT_URL = 'https://developers.google.com/oauthplayground';
-const REFRESH_TOKEN = '1//044ugp27yM4pLCgYIARAAGAQSNwF-L9IrN-gYBSiOdiMEhJSB_Cp35IN0fGWZOG5ikHqEfGUV7uNgWShat1Awr7MxmBpx6wcvalE';
 
 //Access token will be generated each time 3600 seconds
 const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
@@ -112,7 +110,7 @@ app.get("/", (req, res) => {
         .catch((error) => console.log(error.message));
     res.send("Hello");
 })
-app.get("/fetchEmails", (req, res) => {
+app.get("/fetchEmail", (req, res) => {
     getLatestMail(oAuth2Client);
     res.send("Fetching emails...");
 });
