@@ -8,10 +8,21 @@ export default function Login() {
     const navigate = useNavigate();
     const clientId = "862630718442-45e0nspmivb33o8m4hlidp5qaffcs6bb.apps.googleusercontent.com"
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const fetchUserInfo = () => {
+        // Use Google's API to fetch user info
+        window.gapi.client.load('oauth2', 'v2', () => {
+            window.gapi.client.oauth2.userinfo.get().execute((userInfo) => {
+                console.log("User info", userInfo);
+
+                const userEmail = userInfo.email || ''; // Assuming you get email from userInfo
+                setIsLoggedIn(true);
+            });
+        });
+    }
 
     const handleSuccess = (i) => {
         console.log(("User logged in", i))
-        setIsLoggedIn(true);
+        fetchUserInfo();
     }
 
     const handleError = () => {
