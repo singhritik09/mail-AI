@@ -1,9 +1,18 @@
 import express from 'express';
 import { google } from 'googleapis';
 import nodemailer from 'nodemailer';
+import fetchEmails from './producer.js';
+import workerEmailFetch from './worker.js';
+import { Redis } from "ioredis";
+
+const connection = new Redis({
+  host: 'localhost', // Replace with your Redis server host
+  port: 6379,        // Replace with your Redis server port
+});
 
 const port = 8000;
 const app = express();
+
 
 const CLIENT_ID = '102082836200-43dthnd6pq1vs0nh8e9fspsqscjfb112.apps.googleusercontent.com';
 const CLIENT_SECRET = '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';
@@ -31,7 +40,7 @@ async function sendMail() {
         })
 
         const mailOptions = {
-            from: 'singhritik2711@gmail.com',
+            from: 'skyvault11@gmail.com',
             to: 'skyvault11@gmail.com',
             subject: 'This is the mail',
             text: 'Hello from my side',
@@ -88,16 +97,12 @@ async function getLatestMail(auth) {
                 }
             });
         }
-        console.log("Sender's Email:", senderEmail);
-        console.log("Subject:", subject);
-        console.log("Text Body:", textBody);
-        console.log("HTML Body:", htmlBody);
+        return { senderEmail, subject, textBody, htmlBody };
 
     } catch (error) {
         console.error('Error fetching latest email:', error);
     }
 }
-
 
 
 
