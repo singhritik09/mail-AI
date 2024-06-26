@@ -4,7 +4,6 @@ import nodemailer from 'nodemailer';
 import fetchEmails from './producer.js';
 import { Redis } from "ioredis";
 import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, REFRESH_TOKEN } from './secrets.js';
-// import { sendReplies } from './worker.js';
 import { Worker, Queue } from "bullmq";
 import LlamaAI from 'llamaai';
 import { apiToken } from './secrets.js';
@@ -78,7 +77,6 @@ async function getLatestMail(auth) {
                 subject = headers[i].value;
             } else if (headers[i].name === 'From') {
                 const fromHeader = headers[i].value;
-                // Extract the email address from the From header
                 const emailMatch = fromHeader.match(/<([^>]+)>/);
                 senderEmail = emailMatch ? emailMatch[1] : fromHeader;
             }
@@ -190,12 +188,10 @@ async function sendReplies() {
 
 const processedEmailIds = new Set(); // Set to store processed email IDs
 
-// Function to handle fetching emails, processing them, and sending replies
 async function processEmails() {
     try {
         const { senderEmail, subject, textBody, latestId } = await getLatestMail(oAuth2Client);
 
-        // Check if emailId is in processedEmailIds set
         if (!processedEmailIds.has(latestId) && senderEmail !== 'skyvault11@gmail.com') {
             await fetchMessages(senderEmail, subject, textBody);
             processedEmailIds.add(latestId); // Add emailId to processed set
@@ -209,11 +205,8 @@ async function processEmails() {
     }
 }
 
-// Interval in milliseconds (20 seconds)
-const intervalTime = 20 * 1000; // 20 seconds
+const intervalTime = 40 * 1000;
 
-// Set interval to execute processEmails function
 setInterval(processEmails, intervalTime);
 
-// Initial execution
 processEmails();
