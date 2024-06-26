@@ -4,20 +4,15 @@ import nodemailer from 'nodemailer';
 import fetchEmails from './producer.js';
 import workerEmailFetch from './worker.js';
 import { Redis } from "ioredis";
-
-import {CLIENT_ID,CLIENT_SECRET,REDIRECT_URL,REFRESH_TOKEN} from './secrets.js';
+import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, REFRESH_TOKEN } from './secrets.js';
 
 const connection = new Redis({
-  host: 'localhost', // Replace with your Redis server host
-  port: 6379,        // Replace with your Redis server port
+    host: 'localhost',
+    port: 6379,
 });
-
 const port = 8000;
 const app = express();
 
-
-
-//Access token will be generated each time 3600 seconds
 const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
@@ -95,14 +90,11 @@ async function getLatestMail(auth) {
                 }
             });
         }
-        return { senderEmail, subject, textBody, htmlBody };
-
+        return { senderEmail, subject, textBody };
     } catch (error) {
         console.error('Error fetching latest email:', error);
     }
 }
-
-
 
 app.get("/", (req, res) => {
     sendMail()
@@ -110,15 +102,18 @@ app.get("/", (req, res) => {
         .catch((error) => console.log(error.message));
     res.send("Hello");
 })
-app.get("/fetchEmail", (req, res) => {
-    getLatestMail(oAuth2Client);
-    res.send("Fetching emails...");
+app.get("/fetchEmail", async (req, res) => {
+    try {
+        const { senderEmail, subject, textBody } = await getLatestMail(oAuth2Client);
+        await fetchEmails(senderEmail, subject, textBody);
+        res.send("Fetching emails...");
+    }
+    catch (error) {
+        console.error("Error fetching or queuing email:", error);
+        res.status(500).send("Error fetching or queuing email");
+    }
 });
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
-
-
-
-// secret

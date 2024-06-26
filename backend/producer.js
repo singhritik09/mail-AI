@@ -10,11 +10,5 @@ async function fetchMessages(senderEmail, sub, txt){
     });
     console.log("Job added to the queue",res.id);   
 }
-const a="singhritik2711"
-const b="Query"
-const c="Body of the message"
-const d="hello";
-
-fetchMessages(a,b,c,d);
 
 export default fetchMessages;
