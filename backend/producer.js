@@ -8,7 +8,7 @@ async function fetchMessages(senderEmail, sub, txt){
         subject:sub,
         body:txt,
     });
-    console.log("Job added to the queue",res.id);   
+    console.log("Job added to the queue 1",res.id);   
 }
 
 export default fetchMessages;

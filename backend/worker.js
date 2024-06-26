@@ -60,7 +60,8 @@ const workerEmailFetch = new Worker("email-queue", async (job) => {
       await responseQueue.add("response", {
         jobId: job.id,
         response: replyContent,
-        label: label
+        label: label,
+        sender:sender
       });
 
       return { replyContent, label };
@@ -73,7 +74,7 @@ const workerEmailFetch = new Worker("email-queue", async (job) => {
   }
 }, { connection });
 
-
+async function sendReplies(){
   const workerResponse = new Worker('response-queue', async (job) => {
     const replyContent = job.data.response;
     const label = job.data.label;
@@ -86,5 +87,5 @@ const workerEmailFetch = new Worker("email-queue", async (job) => {
     }
 
   }, { connection }).run;
-
-export { workerEmailFetch};
+};
+export { workerEmailFetch,sendReplies};

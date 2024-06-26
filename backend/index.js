@@ -4,7 +4,7 @@ import nodemailer from 'nodemailer';
 import fetchEmails from './producer.js';
 import { Redis } from "ioredis";
 import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, REFRESH_TOKEN } from './secrets.js';
-
+import { sendReplies } from './worker.js';
 const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
