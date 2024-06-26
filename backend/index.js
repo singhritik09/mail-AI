@@ -16,7 +16,7 @@ const app = express();
 const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
-async function sendMail() {
+async function sendMail(senderEmail) {
     try {
         const accessToken = await oAuth2Client.getAccessToken();
         console.log("Access:", accessToken);
@@ -34,10 +34,10 @@ async function sendMail() {
 
         const mailOptions = {
             from: 'skyvault11@gmail.com',
-            to: 'skyvault11@gmail.com',
+            to: senderEmail,
             subject: 'This is the mail',
             text: 'Hello from my side',
-            html: '<h1> Wow it`s working </h1>'
+            html: '<h1> Check working of mail function </h1>'
         }
 
         const result = await transport.sendMail(mailOptions);
@@ -97,7 +97,7 @@ async function getLatestMail(auth) {
 }
 
 app.get("/", (req, res) => {
-    sendMail()
+    sendMail("singhritik2711@gmail.com")
         .then((result) => console.log('Email sent ... ', result))
         .catch((error) => console.log(error.message));
     res.send("Hello");

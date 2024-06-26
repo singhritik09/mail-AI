@@ -14,8 +14,8 @@
     "express": "^4.19.2",
     "googleapis": "^140.0.0",
     "ioredis": "^5.4.1",
+    "llamaai": "^1.0.4",
     "nodemailer": "^6.9.14",
-    "openai": "^4.52.0",
     "redis": "^4.6.14"
   }
 }
