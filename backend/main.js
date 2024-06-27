@@ -303,5 +303,6 @@ async function processEmails() {
   }
 }
 
-const intervalTime = 40 * 1000; 
+const intervalTime = 30 * 1000; 
 setInterval(processEmails, intervalTime);
+processEmails();
